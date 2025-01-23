@@ -74,15 +74,45 @@ fetch_inflation_rate = function(){
 # }
 
 # Fetch bond rates for Nigeria
-fetch_bond_rates <- function() {
-  url <- "https://tradingeconomics.com/nigeria/government-bond-yield"
-  page <- GET(url)
-  html <- content(page, as = "text")
+# fetch_bond_rates <- function() {
+#   url <- "https://tradingeconomics.com/nigeria/government-bond-yield"
+#   page <- GET(url)
+#   html <- content(page, as = "text")
   
-  bond_rates <- html %>%
-    read_html() %>%
-    html_nodes("table") %>%
-    html_table() %>%
-    .[[1]]  # Assuming the bond table is the first table
+#   bond_rates <- html %>%
+#     read_html() %>%
+#     html_nodes("table") %>%
+#     html_table() %>%
+#     .[[1]]  # Assuming the bond table is the first table
+#   return(bond_rates)
+# }
+
+
+fetch_bond_rates <- function() {
+  conn <- connect_db()
+  # Build the query safely using glue_sql to prevent SQL injection
+  query <- glue_sql("
+    SELECT 
+      bond_name AS name,
+      maturity_period AS tenure,
+      coupon_rate AS rate
+    FROM bonds
+  ", .con = conn)
+
+  # Execute the query and fetch the results
+  bond_rates <- tryCatch({
+    dbGetQuery(conn, query)
+  }, error = function(e) {
+    message("Error fetching bond rates: ", e$message)
+    return(NULL)
+  })
+
+  # Check if bond_rates is NULL or empty
+  if (is.null(bond_rates) || nrow(bond_rates) == 0) {
+    message("No bond rates found for the specified country.")
+    return(data.frame(tenure = character(0), rate = numeric(0)))
+  }
+
   return(bond_rates)
 }
+

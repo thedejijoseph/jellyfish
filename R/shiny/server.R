@@ -17,14 +17,14 @@ server <- function(input, output, session) {
   
   output$bond_table <- renderTable({
     bond_data <- fetch_bond_rates()
-    save_bond_rates("Nigeria", bond_data)
+    # save_bond_rates("Nigeria", bond_data)
     bond_data
   })
 
   # Observe Save Button Click
   observeEvent(input$save_bond, {
     db <- connect_db()
-    
+
     # Capture the bond details
     bond_data <- list(
       bond_name = input$bond_name,

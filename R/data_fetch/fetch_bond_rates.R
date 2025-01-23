@@ -1,14 +1,27 @@
-fetch_bond_rates <- function(country_url) {
-  page <- read_html(country_url)
-  
-  bond_rates <- data.frame(
-    tenure = c("2Y", "5Y", "10Y"),
-    rate = c(
-      html_node(page, ".bond-2y-class") %>% html_text() %>% as.numeric(),
-      html_node(page, ".bond-5y-class") %>% html_text() %>% as.numeric(),
-      html_node(page, ".bond-10y-class") %>% html_text() %>% as.numeric()
-    )
-  )
-  
+library(glue)
+
+fetch_bond_rates <- function(conn, country_name) {
+  # Build the query safely using glue_sql to prevent SQL injection
+  query <- glue_sql("
+    SELECT 
+      maturity_period AS tenure,
+      coupon_rate AS rate
+    FROM bonds
+  ", .con = conn)
+
+  # Execute the query and fetch the results
+  bond_rates <- tryCatch({
+    dbGetQuery(conn, query)
+  }, error = function(e) {
+    message("Error fetching bond rates: ", e$message)
+    return(NULL)
+  })
+
+  # Check if bond_rates is NULL or empty
+  if (is.null(bond_rates) || nrow(bond_rates) == 0) {
+    message("No bond rates found for the specified country.")
+    return(data.frame(tenure = character(0), rate = numeric(0)))
+  }
+
   return(bond_rates)
 }
