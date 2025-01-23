@@ -13,13 +13,32 @@ server <- function(input, output, session) {
     paste("Nigeria's Inflation Rate:", rate, "%")
   })
   
+  output$inflation_table <- renderTable({
+    inflation_data <- fetch_inflation_rates()
+    # save_inflation_data("Nigeria", inflation_data)
+    inflation_data
+  })
+
+  output$instruments_table <- renderTable({
+    instruments_data <- fetch_instruents()
+    instruments_data
+  })
+
+  output$below_par_instruments_table <- renderTable({
+    below_par_instruments_data <- fetch_below_par_instruments()
+    below_par_instruments_data
+  })
+
+  output$above_par_instruments_table <- renderTable({
+    above_par_instruments_data <- fetch_above_par_instruments()
+    above_par_instruments_data
+  })
+
   output$bond_table <- renderTable({
     bond_data <- fetch_bond_rates()
     # save_bond_rates("Nigeria", bond_data)
     bond_data
   })
-
-
 
   # Observe Save Button Click
   observeEvent(input$save_bond, {

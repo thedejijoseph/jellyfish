@@ -2,7 +2,8 @@ library(shiny)
 library(bslib)
 
 # Define the UI for the Jellyfish app
-ui <- fluidPage(
+# ui <- fluidPage
+ui <- page_fillable(
   
   # Application title
   titlePanel("Jellyfish: Financial Insights"),
@@ -36,7 +37,16 @@ ui <- fluidPage(
         # Tab for inflation data
         tabPanel(
           "Summary",
-          h4("Summary of Inflation Rates against Returns of Financial Instruments")
+          h4("Summary of Inflation Rates against Returns of Financial Instruments"),
+          card(
+            tableOutput("above_par_instruments_table")
+          ),
+          card(
+            tableOutput("inflation_table")
+          ),
+          card(
+            tableOutput("below_par_instruments_table")
+          )
         ),
         # Tab for manual bond entry
         tabPanel(

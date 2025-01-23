@@ -4,6 +4,8 @@ library(rvest)
 library(dplyr)
 library(stringr)
 
+source(here("R/database/db_connect.R"))
+
 
 extract_nigeria_indicators <- function(url = "https://tradingeconomics.com/nigeria/indicators") {
   # Read the HTML content of the page
@@ -79,4 +81,61 @@ fetch_bond_rates <- function() {
   }
 
   return(bond_rates)
+}
+
+fetch_instruents <- function() {
+  # Fetch all the available instruments for any given country, e.g. Nigeria
+  # Returns a data frame with columns: instrument, description, returns
+
+  bonds <- fetch_bond_rates() %>%
+    rename(instrument = name, description = tenure, returns = rate)
+
+  instruments <- bind_rows(bonds)
+
+  if (nrow(instruments) == 0) {
+    message("No instruments found for the specified country.")
+    return(data.frame(instrument = character(0), description = character(0), returns = numeric(0)))
+  }
+  return(instruments) # data.frame(instrument = character(0), description = character(0), returns = numeric(0))
+}
+
+fetch_below_par_instruments <- function() {
+  # Fetch all the available instruments for any given country, e.g. Nigeria
+  # Returns a data frame with columns: instrument, description, returns
+
+  instruments <- fetch_instruents()
+  inflation_rates <- fetch_inflation_rates() %>%
+    filter(inflation_type == "Inflation Rate") %>%
+    select(inflation_rate)
+  par_rate <- inflation_rates$inflation_rate[1]
+
+  # if return of instrument is lower than par_rate, add to dataframe and return
+  below_par_instruments <- instruments %>%
+    filter(returns < par_rate)
+
+  if (nrow(below_par_instruments) == 0) {
+    message("No instruments found for the specified country.")
+    return(data.frame(instrument = character(0), description = character(0), returns = numeric(0)))
+  }
+  return(below_par_instruments)
+
+}
+
+fetch_above_par_instruments <- function() {
+  # Fetch all the available instruments for any given country, e.g. Nigeria
+  # Returns a data frame with columns: instrument, description, returns
+
+  instruments <- fetch_instruents()
+  inflation_rates <- fetch_inflation_rates()
+  par_rate <- inflation_rates$inflation_rate[3]
+
+  # if return of instrument is lower than par_rate, add to dataframe and return
+  above_par_instruments <- instruments %>%
+    filter(returns > par_rate)
+
+  if (nrow(above_par_instruments) == 0) {
+    message("No instruments found for the specified country.")
+    return(data.frame(instrument = character(0), description = character(0), returns = numeric(0)))
+  }
+  return(above_par_instruments)
 }

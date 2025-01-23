@@ -1,6 +1,9 @@
 
 library(dotenv)
 library(here)
+library(DBI)
+library(RPostgres)
+library(glue)
 
 load_dot_env(here(".env"))
 
