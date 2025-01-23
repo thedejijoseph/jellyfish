@@ -15,9 +15,3 @@ connect_db <- function() {
   )
   return(db)
 }
-
-get_country_id <- function(db, country_name) {
-  query <- "SELECT id FROM countries WHERE name = $1"
-  result <- dbGetQuery(db, query, list(country_name))
-  if (nrow(result) > 0) return(result$id) else return(NA)
-}

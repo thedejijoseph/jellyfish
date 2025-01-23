@@ -1,3 +1,4 @@
+
 library(DBI)
 library(RPostgres)
 library(here)
@@ -22,4 +23,3 @@ save_inflation_data <- function(country_name, date, rate) {
   
   dbDisconnect(db)
 }
-

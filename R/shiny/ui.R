@@ -1,4 +1,5 @@
 library(shiny)
+library(bslib)
 
 # Define the UI for the Jellyfish app
 ui <- fluidPage(
@@ -34,24 +35,19 @@ ui <- fluidPage(
         
         # Tab for inflation data
         tabPanel(
-          "Inflation Rates",
-          h4("Current Inflation Rate"),
-          textOutput("inflation_rate"),
-          br(),
-          plotOutput("inflation_trend")
+          "Summary",
+          h4("Summary of Inflation Rates against Returns of Financial Instruments")
         ),
-        
-        # Tab for bond rates
-        tabPanel(
-          "Bond Rates",
-          h4("Government Bond Yields"),
-          tableOutput("bond_table")
-        ),
-        
         # Tab for manual bond entry
         tabPanel(
           "Add Bond Information",
           h4("Enter Bond Details"),
+          selectInput(
+            inputId = "issuing_country",
+            label = "Issuing Country:",
+            choices = c("Nigeria"),
+            selected = "Nigeria"
+          ),
           textInput(
             inputId = "bond_name",
             label = "Bond Name:",
@@ -60,8 +56,8 @@ ui <- fluidPage(
           numericInput(
             inputId = "maturity_period",
             label = "Maturity Period (Years):",
-            value = 1,
-            min = 1
+            value = 2,
+            min = 2
           ),
           numericInput(
             inputId = "coupon_rate",

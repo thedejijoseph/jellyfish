@@ -2,16 +2,14 @@
 library(shiny)
 library("here")
 
-# source("R/data_fetch/nigeria.R")
-source(here("R/data_fetch/fetch_bond_rates.R"))
-source(here("R/data_fetch/nigeria.R"))
+source(here("R/data_controller/nigeria.R"))
 source(here("R/database/db_operations.R"))
 source(here("R/database/db_connect.R"))
 
 server <- function(input, output, session) {
   output$inflation_rate <- renderText({
     rate <- fetch_inflation_rate()
-    save_inflation_data("Nigeria", Sys.Date(), rate)
+    # save_inflation_data("Nigeria", Sys.Date(), rate)
     paste("Nigeria's Inflation Rate:", rate, "%")
   })
   
@@ -20,6 +18,8 @@ server <- function(input, output, session) {
     # save_bond_rates("Nigeria", bond_data)
     bond_data
   })
+
+
 
   # Observe Save Button Click
   observeEvent(input$save_bond, {
