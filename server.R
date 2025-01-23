@@ -2,9 +2,9 @@
 library(shiny)
 library("here")
 
-source(here("R/data_controller/nigeria.R"))
-source(here("R/database/db_operations.R"))
-source(here("R/database/db_connect.R"))
+source(here("data_controller/nigeria.R"))
+source(here("database/db_operations.R"))
+source(here("database/db_connect.R"))
 
 server <- function(input, output, session) {
   output$inflation_rate <- renderText({

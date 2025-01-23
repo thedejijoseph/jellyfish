@@ -1,6 +1,6 @@
 
-source("R/shiny/ui.R")
-source("R/shiny/server.R")
+source("ui.R")
+source("server.R")
 library(shiny)
 
 options(shiny.autoreload = TRUE)

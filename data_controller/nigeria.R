@@ -4,7 +4,7 @@ library(rvest)
 library(dplyr)
 library(stringr)
 
-source(here("R/database/db_connect.R"))
+source(here("database/db_connect.R"))
 
 
 extract_nigeria_indicators <- function(url = "https://tradingeconomics.com/nigeria/indicators") {

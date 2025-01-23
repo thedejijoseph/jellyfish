@@ -24,6 +24,7 @@ ui <- page_fillable(
         label = "Refresh Data",
         icon = icon("sync")
       ),
+      br(),
       helpText(
         "Choose a country to view financial data, including inflation rates and bond yields."
       )
@@ -37,13 +38,16 @@ ui <- page_fillable(
         # Tab for inflation data
         tabPanel(
           "Summary",
-          h4("Summary of Inflation Rates against Returns of Financial Instruments"),
+          h4("Instruments with returns above or below inflation."),
+          h6("Returns above inflation"),
           card(
             tableOutput("above_par_instruments_table")
           ),
+          h6("Inflation rate"),
           card(
             tableOutput("inflation_table")
           ),
+          h6("Returns below inflation"),
           card(
             tableOutput("below_par_instruments_table")
           )

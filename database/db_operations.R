@@ -3,7 +3,7 @@ library(DBI)
 library(RPostgres)
 library(here)
 
-source(here("R/database/db_connect.R"))
+source(here("database/db_connect.R"))
 
 # Save inflation data to the database
 save_inflation_data <- function(country_name, date, rate) {
